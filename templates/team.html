@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team | 研究团队</title>
+    <link rel="stylesheet" href="/static/style.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .team-section {
+            padding: 150px 0 100px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .team-header-tag {
+            background: linear-gradient(135deg, #8ec5fc 0%, #c490e4 50%, #f8cdda 100%);
+            color: #fff;
+            padding: 12px 60px 12px 30px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 100%, 0 100%);
+            filter: drop-shadow(0 5px 15px rgba(196, 144, 228, 0.4));
+            margin-bottom: 40px;
+            display: inline-block;
+        }
+
+        .group-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 40px;
+            z-index: 20;
+            padding: 0 20px;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #5F6C7B;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #8ec5fc, #c490e4);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 8px 20px rgba(196, 144, 228, 0.3);
+            padding: 8px 28px; 
+        }
+
+        .team-swiper {
+            width: 100%;
+            padding: 20px 0 60px;
+            overflow: visible; 
+        }
+
+        .swiper-slide {
+            width: 320px;
+            height: 480px;
+            transition: filter 0.4s ease, opacity 0.4s ease;
+        }
+
+        .swiper-slide:not(.swiper-slide-active) {
+            filter: blur(3px) brightness(0.9);
+            opacity: 0.6;
+        }
+
+        .team-card {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .team-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(142, 197, 252, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .swiper-slide-active .team-card {
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 30px 60px rgba(142, 197, 252, 0.2), inset 0 0 30px rgba(255, 255, 255, 0.6);
+            border-color: rgba(142, 197, 252, 0.5);
+        }
+
+        .group-badge {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(196, 144, 228, 0.15);
+            color: #c490e4;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 20px 20px 0 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .avatar-container {
+            width: 130px;
+            height: 130px;
+            margin-bottom: 25px;
+            position: relative;
+            padding: 5px;
+            background: linear-gradient(135deg, #8ec5fc, #f8cdda, #c490e4);
+            background-size: 200% 200%;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: organicMorph 8s ease-in-out infinite, gradientFlow 6s ease infinite;
+            box-shadow: 0 10px 20px rgba(142, 197, 252, 0.3);
+            z-index: 2;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.8);
+            border-radius: inherit; 
+            background: #f0f4f8;
+        }
+
+        @keyframes organicMorph {
+            0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+            34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+            67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .member-name {
+            font-size: 1.4rem;
+            color: #3088bf;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .member-desc {
+            font-size: 0.95rem;
+            color: #5F6C7B;
+            line-height: 1.6;
+            margin-bottom: auto; 
+            margin-top: 10px;
+        }
+
+        .swiper-pagination-bullet {
+            background: #5F6C7B;
+            opacity: 0.2;
+            width: 6px;
+            height: 6px;
+            transition: all 0.4s ease;
+        }
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+            background: #8ec5fc;
+            width: 20px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px #8ec5fc;
+        }
+
+        @media (max-width: 768px) {
+            .team-section { padding: 120px 0 60px; }
+            .swiper-slide { width: 290px; height: 440px; }
+            .avatar-container { width: 110px; height: 110px; }
+            .filter-btn { padding: 6px 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <svg class="loader-jellyfish" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+                <defs>
+                    <linearGradient id="liquid-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#e0c3fc; stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#8ec5fc; stop-opacity:1" />
+                    </linearGradient>
+                    <clipPath id="jelly-clip">
+                        <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                        <path d="M60,200 C60,250 40,280 50,300 L55,300 C45,280 65,250 65,200 Z" />
+                        <path d="M85,200 C85,250 75,280 80,300 L85,300 C80,280 90,250 90,200 Z" />
+                        <path d="M115,200 C115,250 125,280 120,300 L115,300 C120,280 110,250 110,200 Z" />
+                        <path d="M140,200 C140,250 160,280 150,300 L145,300 C155,280 135,250 135,200 Z" />
+                    </clipPath>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                <g class="jelly-shell" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none">
+                    <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                    <path d="M60,200 C60,250 40,280 50,300" />
+                    <path d="M85,200 C85,250 75,280 80,300" />
+                    <path d="M115,200 C115,250 125,280 120,300" />
+                    <path d="M140,200 C140,250 160,280 150,300" />
+                </g>
+                <g clip-path="url(#jelly-clip)">
+                    <rect class="liquid-fill" x="0" y="300" width="200" height="300" fill="url(#liquid-gradient)" />
+                </g>
+                <g class="jelly-outline" filter="url(#glow)">
+                    <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                </g>
+            </svg>
+            <div class="loader-text">LOADING <span id="loader-percent">0</span>%</div>
+        </div>
+    </div>
+
+    <div class="spore spore-1"></div>
+    <div class="spore spore-2"></div>
+    <div class="spore spore-3"></div>
+
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo"><img src="/static/image/logo.png" alt="Logo" class="logo-img"></a>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+            <li class="nav-item">
+                <a href="cell.html" class="nav-link">水母美学</a>
+                <ul class="dropdown">
+                    <li><a href="cell.html">水母介绍</a></li>
+                    <li><a href="formula.html">公式展示</a></li>
+                    <li><a href="#">微观摄影</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="ecology.html" class="nav-link">生态共生</a>
+                <ul class="dropdown">
+                    <li><a href="ecology.html#section-1">水母仿生</a></li>
+                    <li><a href="ecology.html#section-2">深海荧光</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="team.html" class="nav-link">团队</a></li>
+        </ul>
+        <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+    </nav>
+
+    <main class="team-section">
+        
+        <div class="team-header-tag">
+            TEAM STRUCTURE
+        </div>
+
+        <div class="group-filters">
+            <button class="filter-btn active" data-index="0">Wiki 网页组</button>
+            <button class="filter-btn" data-index="1">Art 美工组</button>
+            <button class="filter-btn" data-index="2">Experiment 实验组</button>
+            <button class="filter-btn" data-index="6">HP 实践组</button>
+            <button class="filter-btn" data-index="8">Model 数模组</button>
+        </div>
+
+        <div class="swiper team-swiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide" data-group="0">
+                    <div class="team-card">
+                        <span class="group-badge">Wiki</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_9659.png" alt="Web Dev" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 1</h3>
+                        <p class="member-desc">
+                            负责构建交互式前台展现，并致力于将大型语言模型应用于古代配方的溯源与重构研究，正在推进相关的科研基金提案。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="1">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#8ec5fc; background:rgba(142,197,252,0.15)">Art</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_97.png" alt="Art" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 2</h3>
+                        <p class="member-desc">
+                            捕捉细胞级别的美学。负责项目的全部视觉传达，从深海生物荧光的色彩提取，到微观视角的界面玻璃拟态重构设计。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="2">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#5f8a8b; background:rgba(95,138,139,0.15)">Lab / Exp</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_90.png" alt="Exp 1" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 3</h3>
+                        <p class="member-desc">
+                            主导刺细胞毒素提取与分离实验，探索其在神经药理学中的潜在抑制作用，把控核心实验流程与安全标准。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="2">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#5f8a8b; background:rgba(95,138,139,0.15)">Lab / Exp</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_96.png" alt="Exp 2" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 4</h3>
+                        <p class="member-desc">
+                            负责水母荧光蛋白（GFP）的基因克隆与大肠杆菌表达验证，为生物发光机制提供实证数据支持。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="2">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#5f8a8b; background:rgba(95,138,139,0.15)">Lab / Exp</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/1.png" alt="Exp 3" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 5</h3>
+                        <p class="member-desc">
+                            承担细胞培养与显微观察工作，追踪记录水母从水螅体到水母体的生命周期形态发生过程。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="2">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#5f8a8b; background:rgba(95,138,139,0.15)">Lab / Exp</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_9657.png" alt="Exp 4" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 6</h3>
+                        <p class="member-desc">
+                            负责实验数据的质谱分析与初步清洗，设计并优化实验组生化反应条件的梯度测试参数。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="6">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#e0a96d; background:rgba(224,169,109,0.15)">HP</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_9658.png" alt="HP 1" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 7</h3>
+                        <p class="member-desc">
+                            架起实验室与社会的桥梁。负责调研沿海社区对水母爆发的认知，策划海洋生态保护的公众教育工坊。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="6">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#e0a96d; background:rgba(224,169,109,0.15)">HP</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_9659.png" alt="HP 2" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 8</h3>
+                        <p class="member-desc">
+                            统筹利益相关者访谈，分析水母衍生产品在市场伦理与环保法规框架下的可行性闭环。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="8">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#6d9ce0; background:rgba(109,156,224,0.15)">Model</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_97.png" alt="Model 1" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 9</h3>
+                        <p class="member-desc">
+                            构建描述水母运动流体力学的偏微分方程组，利用数值模拟揭示伞盖收缩与推进效率之间的极值关系。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide" data-group="8">
+                    <div class="team-card">
+                        <span class="group-badge" style="color:#6d9ce0; background:rgba(109,156,224,0.15)">Model</span>
+                        <div class="avatar-container">
+                            <img src="/static/image/IMG_96.png" alt="Model 2" class="avatar-img">
+                        </div>
+                        <h3 class="member-name">Name 10</h3>
+                        <p class="member-desc">
+                            应用种群生态学的洛特卡-沃尔泰拉方程，预测温度与盐度变化对水母-浮游生物共生系统的动力学影响。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="/static/script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            if (hamburger && navMenu) {
+                hamburger.onclick = function(e) {
+                    e.stopPropagation(); 
+                    this.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                    if (this.classList.contains('active')) document.body.style.overflow = 'hidden';
+                    else document.body.style.overflow = 'auto';
+                };
+            }
+
+            const swiper = new Swiper('.team-swiper', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                initialSlide: 0, 
+                
+                coverflowEffect: {
+                    rotate: 15,       
+                    stretch: -10,     
+                    depth: 200,       
+                    modifier: 1,      
+                    slideShadows: false, 
+                },
+                
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                keyboard: { enabled: true },
+            });
+
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetIndex = parseInt(btn.getAttribute('data-index'));
+                    swiper.slideTo(targetIndex, 800); 
+                });
+            });
+
+            swiper.on('slideChange', () => {
+                const currentIndex = swiper.activeIndex;
+                
+                filterBtns.forEach(b => b.classList.remove('active'));
+                
+                if(currentIndex === 0) {
+                    document.querySelector('.filter-btn[data-index="0"]').classList.add('active');
+                } else if(currentIndex === 1) {
+                    document.querySelector('.filter-btn[data-index="1"]').classList.add('active');
+                } else if(currentIndex >= 2 && currentIndex <= 5) {
+                    document.querySelector('.filter-btn[data-index="2"]').classList.add('active');
+                } else if(currentIndex >= 6 && currentIndex <= 7) {
+                    document.querySelector('.filter-btn[data-index="6"]').classList.add('active');
+                } else if(currentIndex >= 8) {
+                    document.querySelector('.filter-btn[data-index="8"]').classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
