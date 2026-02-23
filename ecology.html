@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecological Symbiosis | 生态共生</title>
+    <link rel="stylesheet" href="/static/style.css">
+    
+    <style>
+        body {
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding-left: 260px;
+        }
+        @media (max-width: 1024px) {
+            body { padding-left: 0; }
+        }
+
+        :root {
+            --nav-width: 240px;
+            --active-color: #8ec5fc;
+            --text-color: #5F6C7B;
+        }
+
+        .bio-sidebar {
+            position: fixed;
+            top: 50%;
+            left: 40px;
+            transform: translateY(-50%);
+            width: var(--nav-width);
+            z-index: 900;
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .bio-sidebar { display: none; }
+        }
+
+        .bio-line-track {
+            position: absolute;
+            top: 20px; bottom: 20px; left: 4px;
+            width: 2px;
+            background: rgba(224, 195, 252, 0.2);
+            border-radius: 2px;
+        }
+
+        .bio-progress-bar {
+            position: absolute;
+            top: 20px; left: 4px;
+            width: 2px;
+            height: 0;
+            background: linear-gradient(180deg, var(--active-color) 0%, #e0c3fc 100%);
+            box-shadow: 0 0 10px var(--active-color);
+            border-radius: 2px;
+            transition: height 0.3s ease-out;
+            pointer-events: none;
+        }
+
+        .bio-progress-bar::after {
+            content: ''; position: absolute; bottom: -4px; left: -3px;
+            width: 8px; height: 8px; background: #fff; border-radius: 50%;
+            box-shadow: 0 0 15px #fff, 0 0 5px var(--active-color);
+        }
+
+        .bio-menu { list-style: none; padding: 0; margin: 0; position: relative; }
+        .menu-item { position: relative; cursor: pointer; margin-bottom: 10px; }
+
+        @keyframes bioSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .level-1 .menu-title {
+            display: flex; 
+            align-items: center; 
+            padding: 10px 12px;
+            margin-left: -12px;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            opacity: 0.6;
+        }
+
+        .node-dot {
+            width: 10px; height: 10px; background: #fff;
+            border: 2px solid rgba(95, 108, 123, 0.3);
+            border-radius: 50%; margin-right: 15px;
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            z-index: 2;
+        }
+
+        .level-1 .text {
+            font-size: 0.85rem; font-weight: 700; letter-spacing: 2px;
+            color: var(--text-color); text-transform: uppercase;
+        }
+
+        .level-1.active .menu-title { 
+            opacity: 1; 
+            transform: translateX(8px);
+            background: linear-gradient(90deg, rgba(142, 197, 252, 0.7) 0%, rgba(224, 195, 252, 0.3) 70%, transparent 100%);
+            box-shadow: 0 0 25px rgba(142, 197, 252, 0.5);
+            color: #1a5f8a;
+            font-weight: 800;
+        }
+
+        .level-1.active .node-dot {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+            background-image: url('image/IMG_96.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 32px;
+            height: 32px;
+            margin-right: 8px;
+            margin-left: -6px;
+            filter: drop-shadow(0 0 6px rgba(142, 197, 252, 0.9));
+            animation: bioSpin 12s linear infinite;
+        }
+        
+        .sub-menu {
+            list-style: none; padding-left: 24px; margin: 0;
+            max-height: 0; overflow: hidden; opacity: 0;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            border-left: 1px dashed rgba(142, 197, 252, 0.3);
+        }
+
+        .level-1.active .sub-menu {
+            max-height: 200px; opacity: 1; padding-top: 5px; padding-bottom: 15px;
+        }
+
+        .level-2 {
+            display: flex; 
+            align-items: center; 
+            padding: 8px 12px;
+            margin: 2px 0 2px -12px;
+            border-radius: 8px;
+            font-size: 0.8rem; 
+            color: rgba(95, 108, 123, 0.7); 
+            transition: all 0.3s ease;
+        }
+
+        .sub-dot {
+            width: 6px; height: 6px; background: rgba(95, 108, 123, 0.3);
+            border-radius: 50%; margin-right: 10px; transition: all 0.3s;
+        }
+
+        .level-2.active { 
+            color: #3088bf;
+            font-weight: 700;
+            background: linear-gradient(90deg, rgba(142, 197, 252, 0.4) 0%, transparent 100%);
+        }
+
+        .level-2:hover .sub-dot, .level-2.active .sub-dot {
+            background: var(--active-color); box-shadow: 0 0 8px var(--active-color);
+        }
+
+        .content-wrapper {
+            padding: 120px 5vw 50px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .eco-section {
+            min-height: auto;
+            margin-bottom: 120px;
+            position: relative;
+        }
+
+        .eco-header-wrapper {
+            margin-bottom: -2px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+        }
+
+        .eco-header-tag {
+            background: linear-gradient(135deg, #8ec5fc 0%, #c490e4 50%, #f8cdda 100%);
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 12px 60px 12px 30px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 100%, 0 100%);
+            filter: drop-shadow(0 5px 15px rgba(196, 144, 228, 0.4));
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tag-num {
+            opacity: 0.8;
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+
+        .eco-card {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 0 24px 24px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.5);
+            padding: 50px;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(142, 197, 252, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(224, 195, 252, 0.15) 0%, transparent 40%);
+        }
+
+        .eco-subtitle {
+            font-size: 1.2rem;
+            color: #3088bf;
+            margin: 0 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #8ec5fc;
+            line-height: 1;
+            font-weight: bold;
+        }
+
+        .eco-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #5F6C7B;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .placeholder-box {
+            width: 100%;
+            height: 300px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 16px;
+            border: 2px dashed rgba(142, 197, 252, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(95, 108, 123, 0.4);
+            font-size: 1.2rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .placeholder-box:hover {
+            background: rgba(255,255,255,0.8);
+            border-color: #8ec5fc;
+            transform: scale(1.01);
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper { padding: 100px 20px 50px; }
+            .eco-card { padding: 30px 20px; border-radius: 20px; }
+            .eco-header-tag { font-size: 1.2rem; padding: 10px 40px 10px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <svg class="loader-jellyfish" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+                <defs>
+                    <linearGradient id="liquid-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#e0c3fc; stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#8ec5fc; stop-opacity:1" />
+                    </linearGradient>
+                    <clipPath id="jelly-clip">
+                        <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                        <path d="M60,200 C60,250 40,280 50,300 L55,300 C45,280 65,250 65,200 Z" />
+                        <path d="M85,200 C85,250 75,280 80,300 L85,300 C80,280 90,250 90,200 Z" />
+                        <path d="M115,200 C115,250 125,280 120,300 L115,300 C120,280 110,250 110,200 Z" />
+                        <path d="M140,200 C140,250 160,280 150,300 L145,300 C155,280 135,250 135,200 Z" />
+                    </clipPath>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                <g class="jelly-shell" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none">
+                    <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                    <path d="M60,200 C60,250 40,280 50,300" />
+                    <path d="M85,200 C85,250 75,280 80,300" />
+                    <path d="M115,200 C115,250 125,280 120,300" />
+                    <path d="M140,200 C140,250 160,280 150,300" />
+                </g>
+                <g clip-path="url(#jelly-clip)">
+                    <rect class="liquid-fill" x="0" y="300" width="200" height="300" fill="url(#liquid-gradient)" />
+                </g>
+                <g class="jelly-outline" filter="url(#glow)">
+                    <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                </g>
+            </svg>
+            <div class="loader-text">LOADING <span id="loader-percent">0</span>%</div>
+        </div>
+    </div>
+
+    <div class="spore spore-1"></div>
+    <div class="spore spore-2"></div>
+    <div class="spore spore-3"></div>
+
+    <nav class="navbar" id="navbar">
+        <a href="index.html" class="logo"><img src="/static/image/logo.png" alt="Logo" class="logo-img"></a>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="index.html" class="nav-link">首页</a></li>
+            <li class="nav-item">
+                <a href="cell.html" class="nav-link">水母美学</a>
+                <ul class="dropdown">
+                    <li><a href="cell.html">水母介绍</a></li>
+                    <li><a href="formula.html">公式展示</a></li>
+                    <li><a href="#">微观摄影</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="ecology.html" class="nav-link">生态共生</a>
+                <ul class="dropdown">
+                    <li><a href="ecology.html#section-1">水母仿生</a></li>
+                    <li><a href="ecology.html#section-2">深海荧光</a></li>
+                </ul>
+            </li>
+            <li class="nav-item"><a href="team.html" class="nav-link">团队</a></li>
+        </ul>
+        <div class="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+    </nav>
+
+    <nav class="bio-sidebar">
+        <div class="bio-line-track"></div>
+        <div class="bio-progress-bar" id="bioProgressBar"></div>
+        
+        <ul class="bio-menu">
+            <li class="menu-item level-1" data-target="section-1">
+                <div class="menu-title"><span class="node-dot"></span><span class="text">SYMBIOSIS</span></div>
+                <ul class="sub-menu">
+                    <li class="menu-item level-2" data-target="section-1-1"><span class="sub-dot"></span><span class="text">Mutualism</span></li>
+                    <li class="menu-item level-2" data-target="section-1-2"><span class="sub-dot"></span><span class="text">Commensalism</span></li>
+                </ul>
+            </li>
+            <li class="menu-item level-1" data-target="section-2">
+                <div class="menu-title"><span class="node-dot"></span><span class="text">BIOLUMINESCENCE</span></div>
+                <ul class="sub-menu">
+                    <li class="menu-item level-2" data-target="section-2-1"><span class="sub-dot"></span><span class="text">Chemical Reaction</span></li>
+                    <li class="menu-item level-2" data-target="section-2-2"><span class="sub-dot"></span><span class="text">Visual Signals</span></li>
+                </ul>
+            </li>
+            <li class="menu-item level-1" data-target="section-3">
+                <div class="menu-title"><span class="node-dot"></span><span class="text">MORPHOLOGY</span></div>
+            </li>
+        </ul>
+    </nav>
+
+    <main class="content-wrapper">
+        <section id="section-1" class="eco-section">
+            <div class="eco-header-wrapper">
+                <div class="eco-header-tag">
+                    <span class="tag-num">01.</span> SYMBIOSIS 通用共生
+                </div>
+            </div>
+            
+            <div class="eco-card">
+                <p class="eco-text">
+                    在浩瀚的海洋中，水母并非孤独的漂流者。它们与鱼类、藻类甚至细菌形成了复杂的关系网。这些跨物种的互动不仅是生存的策略，更是海洋生态平衡的重要一环。
+                </p>
+
+                <div id="section-1-1">
+                    <h3 class="eco-subtitle">Mutualism / 互利共生</h3>
+                    <p class="eco-text">
+                        牧鱼（Shepherd Fish）与水母是互利共生的经典案例。幼鱼在含有剧毒的触手间穿梭，获得天然的庇护所，免受捕食者侵害；作为回报，它们清理水母身上的寄生虫，并引诱其他小鱼靠近成为水母的猎物。
+                    </p>
+                    <div class="placeholder-box">
+                        [ 图示：小丑鱼与海葵/水母的共生关系 ]
+                    </div>
+                </div>
+
+                <div id="section-1-2" style="margin-top: 40px;">
+                    <h3 class="eco-subtitle">Commensalism / 片利共生</h3>
+                    <p class="eco-text">
+                        有些螃蟹和幼虾会搭乘水母的“便车”。它们附着在水母的伞盖顶部，随着洋流迁徙数千公里。这种旅行方式让它们无需消耗自身能量即可寻找新的觅食地，且对水母几乎没有负面影响。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-2" class="eco-section">
+            <div class="eco-header-wrapper">
+                <div class="eco-header-tag">
+                    <span class="tag-num">02.</span> BIOLUMINESCENCE 深海荧光
+                </div>
+            </div>
+
+            <div class="eco-card">
+                <p class="eco-text">
+                    在阳光无法触及的深海（Deep Sea），黑暗并不是绝对的。许多水母通过体内的化学反应制造光源，这种现象被称为生物荧光。
+                </p>
+                
+                <div id="section-2-1">
+                    <h3 class="eco-subtitle">Chemical Reaction / 化学机制</h3>
+                    <p class="eco-text">
+                        核心公式为：<strong>Luciferin (萤光素) + Oxygen (氧气) = Light (冷光)</strong>。这种发光效率极高，几乎不产生热量，是人类工程学至今难以完美复制的能量转化奇迹。
+                    </p>
+                    <div class="placeholder-box">
+                        [ 图示：维多利亚多管发光水母的分子结构 ]
+                    </div>
+                </div>
+
+                <div id="section-2-2" style="margin-top: 40px;">
+                    <h3 class="eco-subtitle">Visual Signals / 视觉信号</h3>
+                    <p class="eco-text">
+                        水母利用光作为语言。它们通过快速闪烁来惊吓捕食者（防盗警报假说），或者通过柔和的脉冲光吸引浮游生物作为食物，甚至在繁殖季节用特定的光谱寻找配偶。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-3" class="eco-section">
+            <div class="eco-header-wrapper">
+                <div class="eco-header-tag">
+                    <span class="tag-num">03.</span> MORPHOLOGY 形态结构
+                </div>
+            </div>
+
+            <div class="eco-card">
+                <p class="eco-text">
+                    水母的身体由 95% 的水分组成，没有骨骼、心脏或大脑。支撑其生命活动的是一层精密的胶原纤维网（Collagen Mesh）和原始的神经网络。
+                </p>
+                <div class="placeholder-box">
+                    [ 图示：水母解剖结构图 - 伞盖与触手 ]
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    <script src="/static/script.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        if (hamburger && navMenu) {
+            hamburger.onclick = function(e) {
+                e.stopPropagation(); 
+                this.classList.toggle('active');
+                navMenu.classList.toggle('active');
+                if (this.classList.contains('active')) document.body.style.overflow = 'hidden';
+                else document.body.style.overflow = 'auto';
+            };
+        }
+
+        const menuItems = document.querySelectorAll('.level-1');
+        const subItems = document.querySelectorAll('.level-2');
+        const progressBar = document.getElementById('bioProgressBar');
+        const sidebar = document.querySelector('.bio-sidebar');
+        
+        const targetIds = ['section-1', 'section-1-1', 'section-1-2', 'section-2', 'section-2-1', 'section-2-2', 'section-3'];
+        const targets = targetIds.map(id => document.getElementById(id)).filter(el => el);
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -60% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    activateNav(entry.target.id);
+                }
+            });
+        }, observerOptions);
+
+        targets.forEach(t => observer.observe(t));
+
+        function activateNav(targetId) {
+            let activeItem = document.querySelector(`.menu-item[data-target="${targetId}"]`);
+            if (!activeItem) return;
+
+            if (activeItem.classList.contains('level-2')) {
+                subItems.forEach(i => i.classList.remove('active'));
+                activeItem.classList.add('active');
+                
+                const parent = activeItem.closest('.level-1');
+                if (parent) {
+                    menuItems.forEach(i => {
+                        if (i !== parent) i.classList.remove('active');
+                    });
+                    parent.classList.add('active');
+                }
+            } 
+            else {
+                menuItems.forEach(i => {
+                    if (i !== activeItem) i.classList.remove('active');
+                });
+                activeItem.classList.add('active');
+                subItems.forEach(i => i.classList.remove('active'));
+            }
+
+            updateProgressBar(activeItem);
+        }
+
+        function updateProgressBar(targetElement) {
+            const sidebarRect = sidebar.getBoundingClientRect();
+            const dot = targetElement.querySelector('.node-dot') || targetElement.querySelector('.sub-dot');
+            if (!dot) return;
+            
+            const dotRect = dot.getBoundingClientRect();
+            const relativeTop = dotRect.top - sidebarRect.top + (dotRect.height / 2);
+            
+            progressBar.style.height = `${relativeTop}px`;
+        }
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = item.dataset.target;
+                const el = document.getElementById(id);
+                if (el) {
+                    const y = el.getBoundingClientRect().top + window.pageYOffset - 100;
+                    window.scrollTo({top: y, behavior: 'smooth'});
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>

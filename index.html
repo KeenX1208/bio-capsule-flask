@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morandi Bio Capsule</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div id="loader-wrapper">
+    <div class="loader-content">
+        <svg class="loader-jellyfish" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+            <defs>
+                <linearGradient id="liquid-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#e0c3fc; stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#8ec5fc; stop-opacity:1" />
+                </linearGradient>
+
+                <clipPath id="jelly-clip">
+                    <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                    <path d="M60,200 C60,250 40,280 50,300 L55,300 C45,280 65,250 65,200 Z" />
+                    <path d="M85,200 C85,250 75,280 80,300 L85,300 C80,280 90,250 90,200 Z" />
+                    <path d="M115,200 C115,250 125,280 120,300 L115,300 C120,280 110,250 110,200 Z" />
+                    <path d="M140,200 C140,250 160,280 150,300 L145,300 C155,280 135,250 135,200 Z" />
+                </clipPath>
+
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+
+            <g class="jelly-shell" stroke="rgba(255,255,255,0.1)" stroke-width="2" fill="none">
+                <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+                <path d="M60,200 C60,250 40,280 50,300" />
+                <path d="M85,200 C85,250 75,280 80,300" />
+                <path d="M115,200 C115,250 125,280 120,300" />
+                <path d="M140,200 C140,250 160,280 150,300" />
+            </g>
+
+            <g clip-path="url(#jelly-clip)">
+                <rect class="liquid-fill" x="0" y="300" width="200" height="300" fill="url(#liquid-gradient)" />
+            </g>
+
+            <g class="jelly-outline" filter="url(#glow)">
+                <path d="M100,50 C40,50 10,100 10,150 C10,180 30,200 100,200 C170,200 190,180 190,150 C190,100 160,50 100,50 Z" />
+            </g>
+        </svg>
+        
+        <div class="loader-text">
+            LOADING <span id="loader-percent">0</span>%
+        </div>
+    </div>
+</div>
+
+<div style="width:1px;height:1px;overflow:hidden;opacity:0;position:absolute;">
+    <img src="/static/image/1.png" alt="preload">
+    <img src="/static/image/IMG_9659.jpg" alt="preload">
+    <img src="/static/image/IMG_9657.jpg" alt="preload">
+</div>
+    <div class="spore spore-1"></div>
+    <div class="spore spore-2"></div>
+    <div class="spore spore-3"></div>
+
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo">
+            <img src="/static/image/logo.png" alt="Starfish Logo" class="logo-img">
+        </a>
+        
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="#" class="nav-link">首页</a></li>
+            
+            <li class="nav-item">
+                <a href="cell.html" class="nav-link">水母美学</a>
+                <ul class="dropdown">
+                    <li><a href="cell.html">水母介绍</a></li>
+                    <li><a href="formula.html">公式展示</a></li>
+                    <li><a href="#">微观摄影</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item">
+                <a href="ecology.html" class="nav-link">生态共生</a>
+                <ul class="dropdown">
+                    <li><a href="#">水母仿生</a></li>
+                    <li><a href="#">深海荧光</a></li>
+                </ul>
+            </li>
+
+            <li class="nav-item"><a href="team.html" class="nav-link">团队</a></li>
+        </ul>
+
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+
+    <section class="deep-sea-wrapper">
+    
+    <div class="sticky-viewport">
+        <div class="parallax-layer layer-lifeline">
+    <svg class="lifeline-svg" viewBox="0 0 100 2000" preserveAspectRatio="none">
+        <defs>
+            <filter id="line-glow">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+            <linearGradient id="line-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:rgba(255,255,255,0)" />
+                <stop offset="10%" style="stop-color:#94a9ef" />
+                <stop offset="50%" style="stop-color:#8ec5fc" />
+                <stop offset="90%" style="stop-color:#fff" />
+                <stop offset="100%" style="stop-color:rgba(255,255,255,0)" />
+            </linearGradient>
+        </defs>
+        
+        <path class="line-track" d="M50,0 Q80,500 20,1000 T50,2000" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="2" />
+        
+        <path id="scroll-path" class="line-active" d="M50,0 Q80,500 20,1000 T50,2000" 
+            fill="none" 
+            stroke="url(#line-gradient)" 
+            stroke-width="3" 
+            filter="url(#line-glow)"
+            pathLength="1" />
+    </svg>
+</div>
+        <div class="parallax-layer layer-bubbles" data-speed="0.2">
+            <img src="/static/image/IMG_9656.png" alt="Bubbles" class="p-img img-bubbles">
+        </div>
+
+        <div class="parallax-layer layer-jellies" data-speed="0.6">
+            <img src="/static/image/IMG_97.png" alt="Jellyfish Small" class="p-img img-jelly-1">
+            <img src="/static/image/IMG_90.png" alt="Jellyfish Group" class="p-img img-jelly-2">
+            <img src="/static/image/IMG_9659.png" alt="Main Jellyfish" class="p-img img-jelly-main">
+        </div>
+
+        <div class="parallax-layer layer-starfish" data-speed="0.4">
+            <img src="/static/image/IMG_96.png" alt="Starfish" class="p-img img-starfish">
+        </div>
+
+        <div class="parallax-layer layer-whales" data-speed="0.8">
+            <img src="/static/image/IMG_9657.png" alt="Whale Top" class="p-img img-whale-1">
+            <img src="/static/image/IMG_9658.png" alt="Whale Bottom" class="p-img img-whale-2">
+        </div>
+        <div class="parallax-layer layer-data">
+            <div class="depth-meter">
+                <span class="depth-label">CURRENT DEPTH</span>
+                <div class="depth-number-box">
+                    <span id="depth-counter">0</span>
+                    <span class="depth-unit">m</span>
+                </div>
+                <div class="depth-bar"></div>
+            </div>
+        </div>
+        <div class="parallax-text-container">
+            <div class="text-group">
+                <p class="story-line">When the light fades...</p>
+                <p class="story-line">Gravity loses its hold.</p>
+                <p class="story-line">We drift into the silent blue,</p>
+                <p class="story-line">Where giants dream,</p>
+                <p class="story-line">And stars breathe underwater.</p>
+            </div>
+        </div>
+        
+        <div class="deep-overlay"></div>
+    </div>
+</section>
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+    <script src="/static/script.js"></script>
+    
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    if (hamburger && navMenu) {
+        hamburger.onclick = function(e) {
+            e.stopPropagation(); 
+            
+            this.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            
+            if (this.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
+        };
+    }
+
+    document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }));
+});
+</script>
+</html>
